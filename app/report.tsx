@@ -205,6 +205,8 @@ function Toast({ show, th }: { show: boolean; th: TH }) {
 }
 
 // ─── Photo Slider ────────────────────────────────────────────────────
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+
 function PhotoSlider({ th }: { th: TH }) {
   const [idx, setIdx] = useState(0)
 
@@ -222,7 +224,7 @@ function PhotoSlider({ th }: { th: TH }) {
           {/* 사진 1 — 실제 이미지 */}
           <div className="group relative shrink-0 w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
             <Image
-              src="/photos/KakaoTalk_20260412_004029254.jpg"
+              src={`${BASE_PATH}/photos/KakaoTalk_20260412_004029254.jpg`}
               alt="회의 기록 1"
               fill
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
