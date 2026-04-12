@@ -1,0 +1,196 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html { scroll-behavior: smooth; }
+}
+
+/* ── 보고서 스크롤 애니메이션 ──────────────────── */
+.anim {
+  opacity: 0;
+  transform: translateY(1.2rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+.anim.visible { opacity: 1; transform: translateY(0); }
+
+/* ── 좌우 등장 애니메이션 ──────────────────────────── */
+.anim-left {
+  opacity: 0;
+  transform: translateX(-48px);
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+.anim-right {
+  opacity: 0;
+  transform: translateX(48px);
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+.anim-fade {
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0ms);
+}
+.anim-left.visible  { opacity: 1; transform: translateX(0); }
+.anim-right.visible { opacity: 1; transform: translateX(0); }
+.anim-fade.visible  { opacity: 1; }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.06); }
+}
+.glow-orb { animation: breathe 8s ease-in-out infinite; }
+
+.photo-panel {
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.break-keep { word-break: keep-all; overflow-wrap: break-word; }
+
+/* ════════════════════════════════════════════════════
+   PRESENTATION — 발표용 슬라이드 전용 스타일
+════════════════════════════════════════════════════ */
+
+/* ── Keyframes ──────────────────────────────────── */
+@keyframes pr-up {
+  from { opacity: 0; transform: translateY(55px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pr-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pr-scale {
+  from { opacity: 0; transform: scale(0.78); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pr-left {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pr-right {
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Floating keywords (Slide 1) ─────────────────── */
+@keyframes kw1 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  30%     { transform: translate(22px,-28px) rotate(2deg); }
+  70%     { transform: translate(-14px,20px) rotate(-1.5deg); }
+}
+@keyframes kw2 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  25%     { transform: translate(-25px,-20px) rotate(-2deg); }
+  65%     { transform: translate(16px,24px) rotate(1.5deg); }
+}
+@keyframes kw3 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  40%     { transform: translate(28px,18px) rotate(1.5deg); }
+  80%     { transform: translate(-20px,-24px) rotate(-2deg); }
+}
+@keyframes kw4 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  35%     { transform: translate(-30px,14px) rotate(-1deg); }
+  65%     { transform: translate(22px,-22px) rotate(2deg); }
+}
+@keyframes kw5 {
+  0%,100% { transform: translate(0,0) rotate(0deg); }
+  50%     { transform: translate(18px,-20px) rotate(1deg); }
+}
+
+/* ── Timeline bars (Slide 5) ────────────────────── */
+@keyframes bar-grow-full {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes bar-grow-short {
+  0%   { width: 0; }
+  40%  { width: 100%; }
+  100% { width: 64%; }
+}
+
+/* ── Node pulse (Slide 6) ───────────────────────── */
+@keyframes node-pulse {
+  0%,70%,100% { opacity: 0.35; transform: scale(1); }
+  15%,25%     { opacity: 1;    transform: scale(1.1); }
+}
+@keyframes flow-arrow {
+  0%,100% { opacity: 0.2; }
+  50%     { opacity: 1; }
+}
+
+/* ── Light burst (Slide 9) ──────────────────────── */
+@keyframes light-burst {
+  from { opacity: 0; transform: scale(0.3); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes door-open {
+  0%   { transform: perspective(600px) rotateY(-90deg); opacity: 0; }
+  100% { transform: perspective(600px) rotateY(0deg);   opacity: 1; }
+}
+
+/* ── Slide active reveal system ─────────────────── */
+/* All .pr-* elements start invisible */
+[data-slide] .pr,
+[data-slide] .pr-d1,
+[data-slide] .pr-d2,
+[data-slide] .pr-d3,
+[data-slide] .pr-d4,
+[data-slide] .pr-d5,
+[data-slide] .pr-fade,
+[data-slide] .pr-fade-d1,
+[data-slide] .pr-fade-d2,
+[data-slide] .pr-fade-d3,
+[data-slide] .pr-fade-d4,
+[data-slide] .pr-scale,
+[data-slide] .pr-scale-d1,
+[data-slide] .pr-scale-d2,
+[data-slide] .pr-scale-d3,
+[data-slide] .pr-scale-d4,
+[data-slide] .pr-l,
+[data-slide] .pr-l-d1,
+[data-slide] .pr-r,
+[data-slide] .pr-r-d1 { opacity: 0; }
+
+/* Animate in when slide becomes active */
+[data-slide].active .pr         { animation: pr-up    0.8s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-d1      { animation: pr-up    0.8s 0.15s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-d2      { animation: pr-up    0.8s 0.30s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-d3      { animation: pr-up    0.8s 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-d4      { animation: pr-up    0.8s 0.60s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-d5      { animation: pr-up    0.8s 0.75s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-fade    { animation: pr-fade  1.0s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-fade-d1 { animation: pr-fade  1.0s 0.20s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-fade-d2 { animation: pr-fade  1.0s 0.40s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-fade-d3 { animation: pr-fade  1.0s 0.60s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-fade-d4 { animation: pr-fade  1.0s 0.80s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-scale   { animation: pr-scale 0.7s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-scale-d1{ animation: pr-scale 0.7s 0.15s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-scale-d2{ animation: pr-scale 0.7s 0.30s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-scale-d3{ animation: pr-scale 0.7s 0.45s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-scale-d4{ animation: pr-scale 0.7s 0.60s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-l       { animation: pr-left  0.8s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-l-d1    { animation: pr-left  0.8s 0.20s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-r       { animation: pr-right 0.8s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-r-d1    { animation: pr-right 0.8s 0.20s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* Timeline bars */
+[data-slide] .bar-full  { width: 0; }
+[data-slide] .bar-short { width: 0; }
+[data-slide].active .bar-full  { animation: bar-grow-full  0.9s 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .bar-short { animation: bar-grow-short 1.4s 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
