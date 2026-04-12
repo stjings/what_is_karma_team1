@@ -704,9 +704,34 @@ export default function ReportPage() {
         </section>
 
         {/* ════════════════════════════════════════════════════
+            8. 인사이트
+        ════════════════════════════════════════════════════ */}
+        <section className="mb-16 anim">
+          <SectionHeader number="8" title="인사이트" th={th} />
+          <div className="flex flex-col gap-4">
+            {[
+              '이번 과제는 단순한 결과 도출을 넘어, 조직 내 다양한 시각을 공유하고 이를 하나의 방향으로 정리하는 과정 자체에 더 큰 의미가 있다고 이해했습니다.',
+              "저희 조 역시 여러 차례 논의를 거치며 각자의 관점을 충분히 나누었고, 그 과정에서 단순히 '정답'을 찾기보다 우리가 어떤 기준으로 생각하고 일해야 하는지를 고민하는 데 집중했습니다.",
+              '결과적으로 이번 과제를 통해, 우리가 하는 일이 단순한 업무 수행을 넘어 고객의 삶에 어떤 가치를 만들어내고 있는지 다시 바라볼 수 있었고, 앞으로 더 의미 있는 방향으로 일을 만들어갈 수 있는 기준을 고민해볼 수 있는 값진 경험이었다고 생각합니다.',
+            ].map((text, i) => (
+              <p
+                key={i}
+                className="anim text-lg leading-relaxed break-keep"
+                style={{
+                  '--d': `${i * 80}ms`,
+                  color: th.textSub,
+                } as React.CSSProperties}
+              >
+                {text}
+              </p>
+            ))}
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════════
             회의 기록 — 슬라이드 + 호버 확대
         ════════════════════════════════════════════════════ */}
-        <section className="mb-10 anim">
+        <section className="mb-16 anim">
           <SectionHeader title="회의 기록" th={th} />
           <PhotoSlider th={th} />
         </section>
@@ -715,13 +740,8 @@ export default function ReportPage() {
             FOOTER
         ════════════════════════════════════════════════════ */}
         <footer className="anim pt-7" style={{ borderTop: `1px solid ${th.footerDivider}` }}>
-          <div className="space-y-3 text-lg leading-relaxed break-keep mb-8">
-            <p style={{ color: th.footerText }}>
-              이번 과제는 단순 결과 도출보다는 조직 내 다양한 시각을 공유하고 정렬하는 과정 자체가
-              더 중요하다고 이해하고 있습니다. 그러한 취지에 맞게, 저희 조 역시 다양한 관점을 충분히
-              논의하고 하나의 방향으로 정리하는 데 집중하였습니다.
-            </p>
-            <p style={{ color: th.footerText }}>
+          <div className="mb-8">
+            <p className="text-lg leading-relaxed break-keep" style={{ color: th.footerText }}>
               부족한 부분이 다소 있을 수 있으나 너그러이 양해해 주시면 감사하겠습니다.
             </p>
           </div>
