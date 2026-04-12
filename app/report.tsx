@@ -740,11 +740,6 @@ export default function ReportPage() {
             FOOTER
         ════════════════════════════════════════════════════ */}
         <footer className="anim pt-7" style={{ borderTop: `1px solid ${th.footerDivider}` }}>
-          <div className="mb-8">
-            <p className="text-lg leading-relaxed break-keep" style={{ color: th.footerText }}>
-              부족한 부분이 다소 있을 수 있으나 너그러이 양해해 주시면 감사하겠습니다.
-            </p>
-          </div>
 
           <div className="flex items-end justify-between">
             <div>
