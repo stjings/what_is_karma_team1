@@ -476,7 +476,7 @@ export default function ReportPage() {
             <SectionHeader number="3" title="핵심 포인트" th={th} />
             <p className="text-xl leading-relaxed break-keep mb-6" style={{ color: th.textSub }}>
               정리를 해보니 우리 회사 안에는 다양한 관점이 존재하지만, 모든 것을 동시에 취하기는
-              어렵다는 점이 드러났습니다.
+              어렵다는 점이 딜레마로 드러났습니다.
             </p>
           </div>
 
