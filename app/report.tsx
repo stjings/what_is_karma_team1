@@ -312,8 +312,15 @@ export default function ReportPage() {
     if (stored === 'light') setIsDark(false)
   }, [])
 
+  // body 스크롤 잠금 (모바일 fixed 토글 고정용)
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
   // 스크롤 애니메이션 옵저버
   useEffect(() => {
+    const scrollEl = document.getElementById('report-scroll')
     const els = document.querySelectorAll<HTMLElement>('.anim, .anim-left, .anim-right, .anim-fade')
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
@@ -322,7 +329,7 @@ export default function ReportPage() {
           io.unobserve(e.target)
         }
       }),
-      { threshold: 0.06, rootMargin: '0px 0px -20px 0px' }
+      { threshold: 0.06, rootMargin: '0px 0px -20px 0px', root: scrollEl ?? null }
     )
     els.forEach((el) => io.observe(el))
     return () => io.disconnect()
@@ -348,11 +355,11 @@ export default function ReportPage() {
 
   return (
     <div
-      className="min-h-[100dvh] font-sans antialiased transition-colors duration-300"
+      className="fixed inset-0 font-sans antialiased transition-colors duration-300"
       style={{ background: th.bg, color: th.text }}
     >
       {/* ── Ambient 배경 ──────────────────────────────────────── */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
         <div
           className="glow-orb absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full"
           style={{ background: `radial-gradient(ellipse, ${th.orbColor} 0%, transparent 70%)` }}
@@ -363,7 +370,7 @@ export default function ReportPage() {
         />
       </div>
 
-      {/* ── 상단 바 (토글 + 다크모드) ────────────────────────── */}
+      {/* ── 상단 바 (토글 + 다크모드) — 스크롤 컨테이너 밖 ── */}
       <TopBar
         onPresentationClick={handlePresentationClick}
         isDark={isDark}
@@ -374,7 +381,8 @@ export default function ReportPage() {
       {/* ── 토스트 (상단) ─────────────────────────────────────── */}
       <Toast show={showToast} th={th} />
 
-      {/* ── 본문 컨테이너 ─────────────────────────────────────── */}
+      {/* ── 스크롤 가능한 본문 영역 ───────────────────────────── */}
+      <div id="report-scroll" className="absolute inset-0 overflow-y-auto" style={{ zIndex: 5 }}>
       <div className="relative max-w-4xl mx-auto px-6 sm:px-12 py-16 pb-28" style={{ zIndex: 10 }}>
 
         {/* ════════════════════════════════════════════════════
@@ -751,6 +759,7 @@ export default function ReportPage() {
         </footer>
 
       </div>
+      </div>{/* /report-scroll */}
     </div>
   )
 }
