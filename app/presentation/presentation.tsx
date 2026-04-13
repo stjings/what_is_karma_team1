@@ -84,11 +84,8 @@ export default function PresentationSlides() {
     document.querySelector(`[data-slide-index="${i}"]`)?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <div
-      className="fixed inset-0 overflow-y-scroll"
-      style={{ scrollSnapType: 'y mandatory', overscrollBehaviorY: 'none' }}
-    >
-      {/* ── 상단 가운데 토글 ─────────────────────── */}
+    <>
+      {/* ── 상단 가운데 토글 (스크롤 컨테이너 밖) ── */}
       <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 px-2" style={{ maxWidth: '100vw' }}>
         <div
           className="relative flex items-center rounded-full p-1 flex-nowrap"
@@ -124,7 +121,7 @@ export default function PresentationSlides() {
         </div>
       </div>
 
-      {/* ── 페이지 도트 ──────────────────────────── */}
+      {/* ── 페이지 도트 (스크롤 컨테이너 밖) ──────── */}
       <div className="fixed right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2.5">
         {Array.from({ length: TOTAL }).map((_, i) => (
           <button
@@ -138,6 +135,11 @@ export default function PresentationSlides() {
           />
         ))}
       </div>
+
+      <div
+        className="fixed inset-0 overflow-y-scroll"
+        style={{ scrollSnapType: 'y mandatory', overscrollBehaviorY: 'none' }}
+      >
 
       {/* ══════════════════════════════════════════
           SLIDE 1 — 우리는 무엇을 파는 회사인가
@@ -624,5 +626,6 @@ export default function PresentationSlides() {
         </div>
       </Slide>
     </div>
+    </>
   )
 }
