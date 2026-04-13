@@ -137,10 +137,10 @@ function TopBar({
   th: TH
 }) {
   return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+    <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-2" style={{ maxWidth: '100vw' }}>
       {/* 보고 자료 / 발표 자료 토글 */}
       <div
-        className="relative flex items-center rounded-full p-1"
+        className="relative flex items-center rounded-full p-1 flex-nowrap"
         style={{ background: th.toggleBg, border: `1px solid ${th.toggleBorder}`, backdropFilter: 'blur(12px)' }}
       >
         <span
@@ -148,15 +148,15 @@ function TopBar({
           style={{ width: 'calc(50% - 4px)', background: th.toggleActiveBg, border: `1px solid ${th.toggleActiveBorder}` }}
         />
         <button
-          className="relative z-10 px-5 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200"
-          style={{ minWidth: 90, color: th.toggleActiveText }}
+          className="relative z-10 px-3 py-1.5 text-xs sm:text-sm sm:px-5 font-semibold rounded-full transition-colors duration-200 whitespace-nowrap"
+          style={{ color: th.toggleActiveText }}
         >
           보고 자료
         </button>
         <button
           onClick={onPresentationClick}
-          className="relative z-10 px-5 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200"
-          style={{ minWidth: 90, color: th.toggleInactiveText }}
+          className="relative z-10 px-3 py-1.5 text-xs sm:text-sm sm:px-5 font-semibold rounded-full transition-colors duration-200 whitespace-nowrap"
+          style={{ color: th.toggleInactiveText }}
         >
           발표 자료
         </button>
@@ -165,11 +165,11 @@ function TopBar({
       {/* 다크/라이트 모드 버튼 — 토글 바로 오른쪽 */}
       <button
         onClick={onToggleDark}
-        className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+        className="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-200"
         style={{ background: th.modeBtnBg, border: `1px solid ${th.modeBtnBorder}`, backdropFilter: 'blur(12px)' }}
         title={isDark ? '라이트 모드' : '다크 모드'}
       >
-        <span style={{ fontSize: '1rem' }}>{isDark ? '☀️' : '🌙'}</span>
+        <span style={{ fontSize: '0.9rem' }}>{isDark ? '☀️' : '🌙'}</span>
       </button>
     </div>
   )

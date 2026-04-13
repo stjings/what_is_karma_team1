@@ -89,9 +89,9 @@ export default function PresentationSlides() {
       style={{ scrollSnapType: 'y mandatory', overscrollBehaviorY: 'none' }}
     >
       {/* ── 상단 가운데 토글 ─────────────────────── */}
-      <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50">
+      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-50 px-2" style={{ maxWidth: '100vw' }}>
         <div
-          className="relative flex items-center rounded-full p-1"
+          className="relative flex items-center rounded-full p-1 flex-nowrap"
           style={{
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.12)',
@@ -110,15 +110,14 @@ export default function PresentationSlides() {
           {/* 보고자료 */}
           <Link
             href="/"
-            className="relative z-10 px-5 py-1.5 text-sm font-semibold rounded-full text-zinc-400 hover:text-zinc-200 transition-colors duration-200"
-            style={{ minWidth: 90, textAlign: 'center' }}
+            className="relative z-10 px-3 py-1.5 text-xs sm:text-sm sm:px-5 font-semibold rounded-full text-zinc-400 hover:text-zinc-200 transition-colors duration-200 whitespace-nowrap"
+            style={{ textAlign: 'center' }}
           >
             보고자료
           </Link>
           {/* 발표자료 */}
           <button
-            className="relative z-10 px-5 py-1.5 text-sm font-semibold rounded-full text-white transition-colors duration-200"
-            style={{ minWidth: 90 }}
+            className="relative z-10 px-3 py-1.5 text-xs sm:text-sm sm:px-5 font-semibold rounded-full text-white transition-colors duration-200 whitespace-nowrap"
           >
             발표자료
           </button>
