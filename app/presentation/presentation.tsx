@@ -174,7 +174,7 @@ export default function PresentationSlides() {
         <div className="relative z-10 text-center px-8 max-w-4xl">
           <p className="pr text-amber-400/70 text-base tracking-[0.3em] uppercase font-semibold mb-8"
             style={{ fontFamily: 'Pretendard' }}>
-            업의 본질 정의 — ○○조
+            업의 본질 정의 — 1조
           </p>
           <h1
             className="pr-d1 font-extrabold text-white break-keep leading-tight"
@@ -426,7 +426,7 @@ export default function PresentationSlides() {
             className="pr text-amber-400/60 text-xs tracking-[0.3em] uppercase font-semibold mb-10"
             style={{ fontFamily: 'Pretendard' }}
           >
-            ○○조의 정의
+            1조의 정의
           </p>
           <blockquote
             className="pr-d1 font-extrabold text-white break-keep leading-snug mb-14"
@@ -619,7 +619,7 @@ export default function PresentationSlides() {
             style={{ background: 'rgba(217,119,6,0.12)', border: '1px solid rgba(217,119,6,0.3)' }}
           >
             <span style={{ color: '#d97706', fontFamily: 'Pretendard', fontWeight: 700, fontSize: '1rem' }}>
-              ○○조 · 업의 본질 정의
+              1조 · 업의 본질 정의
             </span>
           </div>
         </div>
