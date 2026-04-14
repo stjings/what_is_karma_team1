@@ -395,7 +395,7 @@ export default function ReportPage() {
               조별 토론 결과 보고서
             </span>
             <span style={{ color: th.textMuted }}>·</span>
-            <span className="text-sm" style={{ color: th.textMuted }}>2026.04.13</span>
+            <span className="text-sm" style={{ color: th.textMuted }}>2026.04.15</span>
             <span className="h-px flex-1" style={{ background: th.divider }} />
           </div>
 
@@ -752,7 +752,7 @@ export default function ReportPage() {
           <div className="flex items-end justify-between">
             <div>
               <div className="text-lg font-semibold" style={{ color: th.text }}>1조 조장 진광식 드림</div>
-              <div className="text-base mt-1" style={{ color: th.footerMuted }}>2026년 4월 13일</div>
+              <div className="text-base mt-1" style={{ color: th.footerMuted }}>2026년 4월 15일</div>
             </div>
             <div className="text-base tracking-[0.1em]" style={{ color: th.footerMuted }}>감사합니다</div>
           </div>
