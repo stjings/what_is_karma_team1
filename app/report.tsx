@@ -230,14 +230,19 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
       if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
     }
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
   }, [onClose])
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.92)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.95)' }}
+      onClick={onClose}
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
       onTouchEnd={e => {
         if (touchStartX.current === null) return
@@ -250,22 +255,26 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
       {/* 닫기 버튼 — 상단 중앙 */}
       <button
         onClick={onClose}
-        className="absolute top-5 left-1/2 -translate-x-1/2 z-10 flex items-center justify-center rounded-full text-white font-bold text-xl transition-opacity hover:opacity-70"
-        style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+        className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center rounded-full text-white font-bold text-lg transition-opacity hover:opacity-70"
+        style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}
         aria-label="닫기"
       >
         ✕
       </button>
 
-      {/* 이미지 */}
-      <div className="relative w-full h-full flex items-center justify-center px-16 py-16">
+      {/* 이미지 영역 — 거의 꽉 차게 */}
+      <div
+        className="relative"
+        style={{ width: '96vw', height: '90vh' }}
+        onClick={e => e.stopPropagation()}
+      >
         <Image
           key={idx}
           src={`${BASE_PATH}${images[idx].src}`}
           alt={images[idx].alt}
           fill
           className="object-contain"
-          sizes="100vw"
+          sizes="96vw"
           priority
         />
       </div>
@@ -273,29 +282,29 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
       {/* 좌우 화살표 */}
       {idx > 0 && (
         <button
-          onClick={prev}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
-          style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+          onClick={e => { e.stopPropagation(); prev() }}
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
+          style={{ width: 52, height: 52, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.2)' }}
         >
           ←
         </button>
       )}
       {idx < total - 1 && (
         <button
-          onClick={next}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
-          style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+          onClick={e => { e.stopPropagation(); next() }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
+          style={{ width: 52, height: 52, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.2)' }}
         >
           →
         </button>
       )}
 
       {/* 하단 도트 */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5">
         {images.map((_, i) => (
           <button
             key={i}
-            onClick={() => setIdx(i)}
+            onClick={e => { e.stopPropagation(); setIdx(i) }}
             className="rounded-full transition-all duration-300"
             style={{ width: i === idx ? 22 : 8, height: 8, background: i === idx ? '#fff' : 'rgba(255,255,255,0.35)' }}
           />
@@ -304,6 +313,9 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
     </div>
   )
 }
+
+// 첫 번째 이미지(KakaoTalk) 기준 가로세로 비율 = 1400:1050 = 4:3
+const SLIDER_ASPECT = '1400 / 1050'
 
 function PhotoSlider({ th }: { th: TH }) {
   const [idx, setIdx] = useState(0)
@@ -337,8 +349,8 @@ function PhotoSlider({ th }: { th: TH }) {
             {CHAT_IMAGES.map((img, i) => (
               <div
                 key={i}
-                className="relative shrink-0 w-full flex items-center justify-center overflow-hidden"
-                style={{ minHeight: '480px', background: th.photoPlaceholderBg, cursor: 'pointer' }}
+                className="relative shrink-0 w-full overflow-hidden"
+                style={{ aspectRatio: SLIDER_ASPECT, background: th.photoPlaceholderBg, cursor: 'pointer' }}
                 onClick={() => setLightboxIdx(i)}
               >
                 <Image
@@ -347,7 +359,7 @@ function PhotoSlider({ th }: { th: TH }) {
                   fill
                   className="object-contain transition-transform duration-500 ease-out hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 896px"
-                  loading="lazy"
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
               </div>
             ))}
