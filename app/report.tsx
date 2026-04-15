@@ -249,24 +249,25 @@ function Lightbox({
 
   // 다크/라이트 버튼 스타일
   const btnBase: React.CSSProperties = {
+    position: 'fixed',
     width: 48, height: 48,
     borderRadius: '50%',
     fontSize: '1.2rem',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     cursor: 'pointer',
     transition: 'opacity 0.2s',
-    flexShrink: 0,
-    backdropFilter: 'blur(8px)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    zIndex: 10000,
     ...(isDark
-      ? { background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.22)', color: '#ffffff' }
-      : { background: 'rgba(255,255,255,0.88)', border: '1px solid rgba(0,0,0,0.14)', color: '#18181b' }
+      ? { background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', color: '#ffffff' }
+      : { background: 'rgba(255,255,255,0.9)', border: '1px solid rgba(0,0,0,0.15)', color: '#18181b' }
     ),
   }
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center"
-      style={{ zIndex: 9999, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
       onClick={onClose}
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
       onTouchEnd={e => {
@@ -277,48 +278,44 @@ function Lightbox({
         touchStartX.current = null
       }}
     >
-      <div className="flex flex-col items-center gap-4" onClick={e => e.stopPropagation()}>
+      {/* 이미지 — 완전 전체화면 */}
+      <Image
+        key={idx}
+        src={`${BASE_PATH}${images[idx].src}`}
+        alt={images[idx].alt}
+        fill
+        sizes="100vw"
+        priority
+        style={{ objectFit: 'contain' }}
+        onClick={e => e.stopPropagation()}
+      />
 
-        {/* 닫기 버튼 — 이미지 위 중앙 */}
-        <button onClick={onClose} style={btnBase} aria-label="닫기">✕</button>
+      {/* 닫기 버튼 — 상단 중앙 고정 */}
+      <button onClick={onClose} style={{ ...btnBase, top: 20, left: '50%', transform: 'translateX(-50%)' }} aria-label="닫기">✕</button>
 
-        {/* 좌화살표 | 이미지 | 우화살표 */}
-        <div className="flex items-center gap-4">
+      {/* 좌 화살표 — 좌측 중앙 고정 */}
+      <button
+        onClick={e => { e.stopPropagation(); prev() }}
+        style={{ ...btnBase, top: '50%', left: 20, transform: 'translateY(-50%)', opacity: idx > 0 ? 1 : 0, pointerEvents: idx > 0 ? 'auto' : 'none' }}
+      >←</button>
+
+      {/* 우 화살표 — 우측 중앙 고정 */}
+      <button
+        onClick={e => { e.stopPropagation(); next() }}
+        style={{ ...btnBase, top: '50%', right: 20, transform: 'translateY(-50%)', opacity: idx < total - 1 ? 1 : 0, pointerEvents: idx < total - 1 ? 'auto' : 'none' }}
+      >→</button>
+
+      {/* 도트 — 하단 중앙 고정 */}
+      <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 10000, display: 'flex', gap: 10 }}>
+        {images.map((_, i) => (
           <button
-            onClick={prev}
-            style={{ ...btnBase, opacity: idx > 0 ? 1 : 0, pointerEvents: idx > 0 ? 'auto' : 'none' }}
-          >←</button>
-
-          {/* 이미지: 브라우저 높이 80% */}
-          <Image
-            key={idx}
-            src={`${BASE_PATH}${images[idx].src}`}
-            alt={images[idx].alt}
-            width={0}
-            height={0}
-            sizes="90vw"
-            priority
-            style={{ height: '80vh', width: 'auto', maxWidth: '82vw', objectFit: 'contain', display: 'block' }}
+            key={i}
+            onClick={e => { e.stopPropagation(); go(i) }}
+            className="rounded-full transition-all duration-300"
+            style={{ width: i === idx ? 22 : 8, height: 8, cursor: 'pointer',
+              background: i === idx ? '#fff' : 'rgba(255,255,255,0.38)' }}
           />
-
-          <button
-            onClick={next}
-            style={{ ...btnBase, opacity: idx < total - 1 ? 1 : 0, pointerEvents: idx < total - 1 ? 'auto' : 'none' }}
-          >→</button>
-        </div>
-
-        {/* 도트 */}
-        <div className="flex items-center gap-2.5">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => go(i)}
-              className="rounded-full transition-all duration-300"
-              style={{ width: i === idx ? 22 : 8, height: 8, cursor: 'pointer',
-                background: i === idx ? (isDark ? '#fff' : '#18181b') : 'rgba(255,255,255,0.38)' }}
-            />
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   )
