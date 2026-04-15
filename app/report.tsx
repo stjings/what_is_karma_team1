@@ -208,6 +208,7 @@ function Toast({ show, th }: { show: boolean; th: TH }) {
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 
 const CHAT_IMAGES = [
+  { src: '/photos/KakaoTalk_20260412_004029254.jpg', alt: '회의 기록 0' },
   { src: '/photos/chat1.png', alt: '회의 기록 1' },
   { src: '/photos/chat2.png', alt: '회의 기록 2' },
   { src: '/photos/chat3.png', alt: '회의 기록 3' },
@@ -215,64 +216,166 @@ const CHAT_IMAGES = [
   { src: '/photos/chat5.png', alt: '회의 기록 5' },
 ]
 
-function PhotoSlider({ th }: { th: TH }) {
-  const [idx, setIdx] = useState(0)
-  const total = CHAT_IMAGES.length
+function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; startIdx: number; onClose: () => void }) {
+  const [idx, setIdx] = useState(startIdx)
+  const total = images.length
+  const touchStartX = useRef<number | null>(null)
+
+  const prev = () => setIdx(i => Math.max(0, i - 1))
+  const next = () => setIdx(i => Math.min(total - 1, i + 1))
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') prev()
+      if (e.key === 'ArrowRight') next()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   return (
-    <div>
-      <div
-        className="relative rounded-2xl overflow-hidden"
-        style={{ border: `1px solid ${th.cardBorder}` }}
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+      style={{ background: 'rgba(0,0,0,0.92)' }}
+      onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+      onTouchEnd={e => {
+        if (touchStartX.current === null) return
+        const dx = e.changedTouches[0].clientX - touchStartX.current
+        if (dx < -50) next()
+        else if (dx > 50) prev()
+        touchStartX.current = null
+      }}
+    >
+      {/* 닫기 버튼 — 상단 중앙 */}
+      <button
+        onClick={onClose}
+        className="absolute top-5 left-1/2 -translate-x-1/2 z-10 flex items-center justify-center rounded-full text-white font-bold text-xl transition-opacity hover:opacity-70"
+        style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+        aria-label="닫기"
       >
-        {/* Slide track */}
-        <div
-          className="flex"
-          style={{ transform: `translateX(-${idx * 100}%)`, transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)' }}
-        >
-          {CHAT_IMAGES.map((img, i) => (
-            <div
-              key={i}
-              className="relative shrink-0 w-full flex items-center justify-center"
-              style={{ minHeight: '480px', background: th.photoPlaceholderBg }}
-            >
-              <Image
-                src={`${BASE_PATH}${img.src}`}
-                alt={img.alt}
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 896px"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
+        ✕
+      </button>
 
-        {/* 좌우 화살표 */}
-        {idx > 0 && (
-          <button
-            onClick={() => setIdx(idx - 1)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
-            style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
-          >
-            ←
-          </button>
-        )}
-        {idx < total - 1 && (
-          <button
-            onClick={() => setIdx(idx + 1)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
-            style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
-          >
-            →
-          </button>
-        )}
+      {/* 이미지 */}
+      <div className="relative w-full h-full flex items-center justify-center px-16 py-16">
+        <Image
+          key={idx}
+          src={`${BASE_PATH}${images[idx].src}`}
+          alt={images[idx].alt}
+          fill
+          className="object-contain"
+          sizes="100vw"
+          priority
+        />
       </div>
 
-      {/* 슬라이드 카운터 + 하단 네비게이터 도트 */}
-      <div className="flex flex-col items-center gap-2 mt-4">
-        <p className="text-xs" style={{ color: th.textMuted }}>{idx + 1} / {total}</p>
-        <div className="flex items-center gap-2.5">
+      {/* 좌우 화살표 */}
+      {idx > 0 && (
+        <button
+          onClick={prev}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
+          style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+        >
+          ←
+        </button>
+      )}
+      {idx < total - 1 && (
+        <button
+          onClick={next}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center rounded-full text-white text-2xl transition-opacity hover:opacity-70"
+          style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)' }}
+        >
+          →
+        </button>
+      )}
+
+      {/* 하단 도트 */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIdx(i)}
+            className="rounded-full transition-all duration-300"
+            style={{ width: i === idx ? 22 : 8, height: 8, background: i === idx ? '#fff' : 'rgba(255,255,255,0.35)' }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function PhotoSlider({ th }: { th: TH }) {
+  const [idx, setIdx] = useState(0)
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
+  const total = CHAT_IMAGES.length
+  const touchStartX = useRef<number | null>(null)
+
+  const prev = () => setIdx(i => Math.max(0, i - 1))
+  const next = () => setIdx(i => Math.min(total - 1, i + 1))
+
+  return (
+    <>
+      <div>
+        <div
+          className="relative rounded-2xl overflow-hidden"
+          style={{ border: `1px solid ${th.cardBorder}` }}
+          onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={e => {
+            if (touchStartX.current === null) return
+            const dx = e.changedTouches[0].clientX - touchStartX.current
+            if (dx < -50) next()
+            else if (dx > 50) prev()
+            touchStartX.current = null
+          }}
+        >
+          {/* Slide track */}
+          <div
+            className="flex"
+            style={{ transform: `translateX(-${idx * 100}%)`, transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)' }}
+          >
+            {CHAT_IMAGES.map((img, i) => (
+              <div
+                key={i}
+                className="relative shrink-0 w-full flex items-center justify-center overflow-hidden"
+                style={{ minHeight: '480px', background: th.photoPlaceholderBg, cursor: 'pointer' }}
+                onClick={() => setLightboxIdx(i)}
+              >
+                <Image
+                  src={`${BASE_PATH}${img.src}`}
+                  alt={img.alt}
+                  fill
+                  className="object-contain transition-transform duration-500 ease-out hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 896px"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* 좌우 화살표 */}
+          {idx > 0 && (
+            <button
+              onClick={e => { e.stopPropagation(); prev() }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
+              style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
+            >
+              ←
+            </button>
+          )}
+          {idx < total - 1 && (
+            <button
+              onClick={e => { e.stopPropagation(); next() }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
+              style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
+            >
+              →
+            </button>
+          )}
+        </div>
+
+        {/* 하단 네비게이터 도트 */}
+        <div className="flex justify-center items-center gap-2.5 mt-4">
           {CHAT_IMAGES.map((_, i) => (
             <button
               key={i}
@@ -287,7 +390,16 @@ function PhotoSlider({ th }: { th: TH }) {
           ))}
         </div>
       </div>
-    </div>
+
+      {/* 라이트박스 */}
+      {lightboxIdx !== null && (
+        <Lightbox
+          images={CHAT_IMAGES}
+          startIdx={lightboxIdx}
+          onClose={() => setLightboxIdx(null)}
+        />
+      )}
+    </>
   )
 }
 
