@@ -207,8 +207,17 @@ function Toast({ show, th }: { show: boolean; th: TH }) {
 // ─── Photo Slider ────────────────────────────────────────────────────
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 
+const CHAT_IMAGES = [
+  { src: '/photos/chat1.png', alt: '회의 기록 1' },
+  { src: '/photos/chat2.png', alt: '회의 기록 2' },
+  { src: '/photos/chat3.png', alt: '회의 기록 3' },
+  { src: '/photos/chat4.png', alt: '회의 기록 4' },
+  { src: '/photos/chat5.png', alt: '회의 기록 5' },
+]
+
 function PhotoSlider({ th }: { th: TH }) {
   const [idx, setIdx] = useState(0)
+  const total = CHAT_IMAGES.length
 
   return (
     <div>
@@ -221,55 +230,37 @@ function PhotoSlider({ th }: { th: TH }) {
           className="flex"
           style={{ transform: `translateX(-${idx * 100}%)`, transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1)' }}
         >
-          {/* 사진 1 — 실제 이미지 */}
-          <div className="group relative shrink-0 w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
-            <Image
-              src={`${BASE_PATH}/photos/KakaoTalk_20260412_004029254.jpg`}
-              alt="회의 기록 1"
-              fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 896px"
-              loading="lazy"
-            />
-          </div>
-
-          {/* 사진 2 — 추가 예정 플레이스홀더 */}
-          <div
-            className="relative shrink-0 w-full flex flex-col items-center justify-center gap-4"
-            style={{ aspectRatio: '4/3', background: th.photoPlaceholderBg }}
-          >
-            <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-              <rect x="5" y="10" width="46" height="36" rx="5"
-                stroke={th.textMuted} strokeWidth="2" opacity="0.4" />
-              <circle cx="18" cy="23" r="4.5"
-                stroke={th.textMuted} strokeWidth="2" opacity="0.4" />
-              <path d="M5 42 L17 30 L26 40 L36 28 L51 42"
-                stroke={th.textMuted} strokeWidth="2" strokeLinejoin="round" opacity="0.4" />
-              <line x1="28" y1="5" x2="28" y2="9"
-                stroke={th.textMuted} strokeWidth="2" strokeLinecap="round" opacity="0.4" />
-              <line x1="20" y1="7" x2="22" y2="10"
-                stroke={th.textMuted} strokeWidth="2" strokeLinecap="round" opacity="0.4" />
-              <line x1="36" y1="7" x2="34" y2="10"
-                stroke={th.textMuted} strokeWidth="2" strokeLinecap="round" opacity="0.4" />
-            </svg>
-            <p className="text-sm font-medium" style={{ color: th.textMuted }}>이미지 추가 예정</p>
-            <p className="text-xs" style={{ color: th.textMuted, opacity: 0.6 }}>회의 기록 2</p>
-          </div>
+          {CHAT_IMAGES.map((img, i) => (
+            <div
+              key={i}
+              className="relative shrink-0 w-full flex items-center justify-center"
+              style={{ minHeight: '480px', background: th.photoPlaceholderBg }}
+            >
+              <Image
+                src={`${BASE_PATH}${img.src}`}
+                alt={img.alt}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 896px"
+                loading="lazy"
+              />
+            </div>
+          ))}
         </div>
 
         {/* 좌우 화살표 */}
         {idx > 0 && (
           <button
-            onClick={() => setIdx(0)}
+            onClick={() => setIdx(idx - 1)}
             className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
             style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
           >
             ←
           </button>
         )}
-        {idx < 1 && (
+        {idx < total - 1 && (
           <button
-            onClick={() => setIdx(1)}
+            onClick={() => setIdx(idx + 1)}
             className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
             style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
           >
@@ -278,20 +269,23 @@ function PhotoSlider({ th }: { th: TH }) {
         )}
       </div>
 
-      {/* 하단 네비게이터 도트 */}
-      <div className="flex justify-center items-center gap-2.5 mt-4">
-        {[0, 1].map((i) => (
-          <button
-            key={i}
-            onClick={() => setIdx(i)}
-            className="rounded-full transition-all duration-300"
-            style={{
-              width: i === idx ? 22 : 8,
-              height: 8,
-              background: i === idx ? th.dotActive : th.dotInactive,
-            }}
-          />
-        ))}
+      {/* 슬라이드 카운터 + 하단 네비게이터 도트 */}
+      <div className="flex flex-col items-center gap-2 mt-4">
+        <p className="text-xs" style={{ color: th.textMuted }}>{idx + 1} / {total}</p>
+        <div className="flex items-center gap-2.5">
+          {CHAT_IMAGES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIdx(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === idx ? 22 : 8,
+                height: 8,
+                background: i === idx ? th.dotActive : th.dotInactive,
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
