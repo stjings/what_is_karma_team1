@@ -267,7 +267,7 @@ function Lightbox({
 
   return (
     <div
-      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}
       onClick={onClose}
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
       onTouchEnd={e => {
@@ -278,15 +278,13 @@ function Lightbox({
         touchStartX.current = null
       }}
     >
-      {/* 이미지 — 완전 전체화면 */}
-      <Image
+      {/* 이미지 — 세로 100vh 풀사이즈, 가로 비율 자동 */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         key={idx}
         src={`${BASE_PATH}${images[idx].src}`}
         alt={images[idx].alt}
-        fill
-        sizes="100vw"
-        priority
-        style={{ objectFit: 'contain' }}
+        style={{ height: '100vh', width: 'auto', maxWidth: 'none', display: 'block', objectFit: 'contain' }}
         onClick={e => e.stopPropagation()}
       />
 
