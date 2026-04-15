@@ -220,10 +220,25 @@ const SLIDES = [
 function Lightbox({ lbIdx, onClose, onNavigate }: { lbIdx: number; onClose: () => void; onNavigate: (i: number) => void }) {
   const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState(lbIdx)
+  const [showClose, setShowClose] = useState(false)
+  const [imgNatural, setImgNatural] = useState<{ w: number; h: number } | null>(null)
   const total = SLIDES.length
   const touchStartX = useRef<number | null>(null)
 
-  const go = (i: number) => { setCurrent(i); onNavigate(i) }
+  const go = (i: number) => { setCurrent(i); onNavigate(i); setImgNatural(null) }
+
+  // 마우스 위치가 실제 이미지(object-contain 영역) 안인지 계산
+  const checkOverImage = (clientX: number, clientY: number, nat: { w: number; h: number } | null) => {
+    if (!nat) return false
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const scale = Math.min(vw / nat.w, vh / nat.h)
+    const rw = nat.w * scale
+    const rh = nat.h * scale
+    const ox = (vw - rw) / 2
+    const oy = (vh - rh) / 2
+    return clientX >= ox && clientX <= ox + rw && clientY >= oy && clientY <= oy + rh
+  }
 
   // 마운트 직후 fade+scale in
   useEffect(() => {
@@ -248,6 +263,8 @@ function Lightbox({ lbIdx, onClose, onNavigate }: { lbIdx: number; onClose: () =
   const content = (
     <div
       onClick={onClose}
+      onMouseMove={e => setShowClose(checkOverImage(e.clientX, e.clientY, imgNatural))}
+      onMouseLeave={() => setShowClose(false)}
       style={{
         position: 'fixed', inset: 0, zIndex: 9999,
         background: visible ? 'rgba(0,0,0,0.88)' : 'rgba(0,0,0,0)',
@@ -270,6 +287,10 @@ function Lightbox({ lbIdx, onClose, onNavigate }: { lbIdx: number; onClose: () =
         key={current}
         src={`${BASE_PATH}${SLIDES[current].src}`}
         alt={SLIDES[current].alt}
+        onLoad={e => {
+          const img = e.currentTarget
+          setImgNatural({ w: img.naturalWidth, h: img.naturalHeight })
+        }}
         onClick={e => e.stopPropagation()}
         style={{
           maxHeight: '100vh',
@@ -284,16 +305,20 @@ function Lightbox({ lbIdx, onClose, onNavigate }: { lbIdx: number; onClose: () =
         }}
       />
 
-      {/* 닫기 — 상단 중앙 고정 */}
+      {/* 닫기 — 마우스 진입 시 위에서 아래로 슬라이드 */}
       <button
-        onClick={onClose}
+        onClick={e => { e.stopPropagation(); onClose() }}
         style={{
-          position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', left: '50%',
+          top: showClose ? 20 : -60,
+          transform: 'translateX(-50%)',
           zIndex: 10000, width: 44, height: 44, borderRadius: '50%',
-          background: '#ef4444', border: '2px solid rgba(255,255,255,0.5)',
+          background: 'rgba(120,120,120,0.75)', border: '1px solid rgba(255,255,255,0.25)',
           backdropFilter: 'blur(8px)', color: '#fff', fontSize: '1.1rem', fontWeight: 700,
           display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-          boxShadow: '0 2px 16px rgba(239,68,68,0.5)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
+          transition: 'top 0.6s cubic-bezier(0.16,1,0.3,1) 0.5s, opacity 0.5s ease 0.5s',
+          opacity: showClose ? 1 : 0,
         }}
       >✕</button>
 
