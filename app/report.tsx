@@ -216,20 +216,26 @@ const CHAT_IMAGES = [
   { src: '/photos/chat5.png', alt: '회의 기록 5' },
 ]
 
-function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; startIdx: number; onClose: (finalIdx: number) => void }) {
+function Lightbox({
+  images, startIdx, isDark, onNavigate, onClose,
+}: {
+  images: typeof CHAT_IMAGES
+  startIdx: number
+  isDark: boolean
+  onNavigate: (i: number) => void
+  onClose: () => void
+}) {
   const [idx, setIdx] = useState(startIdx)
   const total = images.length
   const touchStartX = useRef<number | null>(null)
-  const idxRef = useRef(idx)
-  idxRef.current = idx
 
-  const prev = () => setIdx(i => Math.max(0, i - 1))
-  const next = () => setIdx(i => Math.min(total - 1, i + 1))
-  const close = () => onClose(idxRef.current)
+  const go = (i: number) => { setIdx(i); onNavigate(i) }
+  const prev = () => go(Math.max(0, idx - 1))
+  const next = () => go(Math.min(total - 1, idx + 1))
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
+      if (e.key === 'Escape') onClose()
       if (e.key === 'ArrowLeft') prev()
       if (e.key === 'ArrowRight') next()
     }
@@ -239,27 +245,29 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [])
+  }, [idx])
 
-  const btnStyle: React.CSSProperties = {
+  // 다크/라이트 버튼 스타일
+  const btnBase: React.CSSProperties = {
     width: 48, height: 48,
-    background: 'rgba(255,255,255,0.15)',
-    backdropFilter: 'blur(6px)',
-    border: '1px solid rgba(255,255,255,0.25)',
     borderRadius: '50%',
-    color: '#fff',
-    fontSize: '1.25rem',
+    fontSize: '1.2rem',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     cursor: 'pointer',
     transition: 'opacity 0.2s',
     flexShrink: 0,
+    backdropFilter: 'blur(8px)',
+    ...(isDark
+      ? { background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.22)', color: '#ffffff' }
+      : { background: 'rgba(255,255,255,0.88)', border: '1px solid rgba(0,0,0,0.14)', color: '#18181b' }
+    ),
   }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.82)' }}
-      onClick={close}
+      className="fixed inset-0 flex items-center justify-center"
+      style={{ zIndex: 9999, background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}
+      onClick={onClose}
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
       onTouchEnd={e => {
         if (touchStartX.current === null) return
@@ -269,60 +277,45 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
         touchStartX.current = null
       }}
     >
-      {/* 전체 패널 — 딤 클릭 막기 */}
-      <div
-        className="flex flex-col items-center gap-4"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* 상단: 닫기 버튼 */}
-        <button onClick={close} style={btnStyle} aria-label="닫기">
-          ✕
-        </button>
+      <div className="flex flex-col items-center gap-4" onClick={e => e.stopPropagation()}>
 
-        {/* 중간: 좌화살표 | 이미지 | 우화살표 */}
+        {/* 닫기 버튼 — 이미지 위 중앙 */}
+        <button onClick={onClose} style={btnBase} aria-label="닫기">✕</button>
+
+        {/* 좌화살표 | 이미지 | 우화살표 */}
         <div className="flex items-center gap-4">
-          {/* 좌 화살표 — 항상 공간 차지해서 레이아웃 고정 */}
           <button
             onClick={prev}
-            style={{ ...btnStyle, opacity: idx > 0 ? 1 : 0, pointerEvents: idx > 0 ? 'auto' : 'none' }}
-          >
-            ←
-          </button>
+            style={{ ...btnBase, opacity: idx > 0 ? 1 : 0, pointerEvents: idx > 0 ? 'auto' : 'none' }}
+          >←</button>
 
-          {/* 이미지: 브라우저 높이의 80% */}
-          <div
-            className="relative"
-            style={{ height: '80vh', width: 'auto', aspectRatio: 'auto' }}
-          >
-            <Image
-              key={idx}
-              src={`${BASE_PATH}${images[idx].src}`}
-              alt={images[idx].alt}
-              height={0}
-              width={0}
-              sizes="90vw"
-              priority
-              style={{ height: '80vh', width: 'auto', maxWidth: '90vw', objectFit: 'contain', display: 'block' }}
-            />
-          </div>
+          {/* 이미지: 브라우저 높이 80% */}
+          <Image
+            key={idx}
+            src={`${BASE_PATH}${images[idx].src}`}
+            alt={images[idx].alt}
+            width={0}
+            height={0}
+            sizes="90vw"
+            priority
+            style={{ height: '80vh', width: 'auto', maxWidth: '82vw', objectFit: 'contain', display: 'block' }}
+          />
 
-          {/* 우 화살표 */}
           <button
             onClick={next}
-            style={{ ...btnStyle, opacity: idx < total - 1 ? 1 : 0, pointerEvents: idx < total - 1 ? 'auto' : 'none' }}
-          >
-            →
-          </button>
+            style={{ ...btnBase, opacity: idx < total - 1 ? 1 : 0, pointerEvents: idx < total - 1 ? 'auto' : 'none' }}
+          >→</button>
         </div>
 
-        {/* 하단 도트 */}
+        {/* 도트 */}
         <div className="flex items-center gap-2.5">
           {images.map((_, i) => (
             <button
               key={i}
-              onClick={() => setIdx(i)}
+              onClick={() => go(i)}
               className="rounded-full transition-all duration-300"
-              style={{ width: i === idx ? 22 : 8, height: 8, background: i === idx ? '#fff' : 'rgba(255,255,255,0.35)', cursor: 'pointer' }}
+              style={{ width: i === idx ? 22 : 8, height: 8, cursor: 'pointer',
+                background: i === idx ? (isDark ? '#fff' : '#18181b') : 'rgba(255,255,255,0.38)' }}
             />
           ))}
         </div>
@@ -334,9 +327,9 @@ function Lightbox({ images, startIdx, onClose }: { images: typeof CHAT_IMAGES; s
 // 첫 번째 이미지(KakaoTalk) 기준 가로세로 비율 = 1400:1050 = 4:3
 const SLIDER_ASPECT = '1400 / 1050'
 
-function PhotoSlider({ th }: { th: TH }) {
+function PhotoSlider({ th, isDark }: { th: TH; isDark: boolean }) {
   const [idx, setIdx] = useState(0)
-  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const total = CHAT_IMAGES.length
   const touchStartX = useRef<number | null>(null)
 
@@ -368,7 +361,7 @@ function PhotoSlider({ th }: { th: TH }) {
                 key={i}
                 className="relative shrink-0 w-full overflow-hidden"
                 style={{ aspectRatio: SLIDER_ASPECT, background: th.photoPlaceholderBg, cursor: 'pointer' }}
-                onClick={() => setLightboxIdx(i)}
+                onClick={() => setLightboxOpen(true)}
               >
                 <Image
                   src={`${BASE_PATH}${img.src}`}
@@ -388,18 +381,14 @@ function PhotoSlider({ th }: { th: TH }) {
               onClick={e => { e.stopPropagation(); prev() }}
               className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
               style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
-            >
-              ←
-            </button>
+            >←</button>
           )}
           {idx < total - 1 && (
             <button
               onClick={e => { e.stopPropagation(); next() }}
               className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full flex items-center justify-center text-white text-lg"
               style={{ background: th.arrowBg, backdropFilter: 'blur(4px)' }}
-            >
-              →
-            </button>
+            >→</button>
           )}
         </div>
 
@@ -410,22 +399,20 @@ function PhotoSlider({ th }: { th: TH }) {
               key={i}
               onClick={() => setIdx(i)}
               className="rounded-full transition-all duration-300"
-              style={{
-                width: i === idx ? 22 : 8,
-                height: 8,
-                background: i === idx ? th.dotActive : th.dotInactive,
-              }}
+              style={{ width: i === idx ? 22 : 8, height: 8, background: i === idx ? th.dotActive : th.dotInactive }}
             />
           ))}
         </div>
       </div>
 
       {/* 라이트박스 */}
-      {lightboxIdx !== null && (
+      {lightboxOpen && (
         <Lightbox
           images={CHAT_IMAGES}
-          startIdx={lightboxIdx}
-          onClose={(finalIdx) => { setIdx(finalIdx); setLightboxIdx(null) }}
+          startIdx={idx}
+          isDark={isDark}
+          onNavigate={setIdx}
+          onClose={() => setLightboxOpen(false)}
         />
       )}
     </>
@@ -876,7 +863,7 @@ export default function ReportPage() {
         ════════════════════════════════════════════════════ */}
         <section className="mb-16 anim">
           <SectionHeader title="회의 기록" th={th} />
-          <PhotoSlider th={th} />
+          <PhotoSlider th={th} isDark={isDark} />
         </section>
 
         {/* ════════════════════════════════════════════════════
