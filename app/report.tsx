@@ -507,13 +507,7 @@ export default function ReportPage() {
   }
 
   function handlePresentationClick(e: React.MouseEvent) {
-    if (e.ctrlKey || e.metaKey) {
-      router.push('/presentation')
-      return
-    }
-    if (toastTimer.current) clearTimeout(toastTimer.current)
-    setShowToast(true)
-    toastTimer.current = setTimeout(() => setShowToast(false), 2800)
+    router.push('/presentation')
   }
 
   return (

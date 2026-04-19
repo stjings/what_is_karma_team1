@@ -89,29 +89,58 @@
 
 /* ── Floating keywords (Slide 1) ─────────────────── */
 @keyframes kw1 {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  30%     { transform: translate(22px,-28px) rotate(2deg); }
-  70%     { transform: translate(-14px,20px) rotate(-1.5deg); }
+  0%   { transform: translate(0,0) rotate(0deg); }
+  20%  { transform: translate(40px,-50px) rotate(4deg); }
+  50%  { transform: translate(-30px,35px) rotate(-3deg); }
+  80%  { transform: translate(20px,-20px) rotate(2deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
 @keyframes kw2 {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  25%     { transform: translate(-25px,-20px) rotate(-2deg); }
-  65%     { transform: translate(16px,24px) rotate(1.5deg); }
+  0%   { transform: translate(0,0) rotate(0deg); }
+  25%  { transform: translate(-50px,-35px) rotate(-4deg); }
+  55%  { transform: translate(35px,45px) rotate(3deg); }
+  85%  { transform: translate(-20px,15px) rotate(-2deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
 @keyframes kw3 {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  40%     { transform: translate(28px,18px) rotate(1.5deg); }
-  80%     { transform: translate(-20px,-24px) rotate(-2deg); }
+  0%   { transform: translate(0,0) rotate(0deg); }
+  30%  { transform: translate(55px,30px) rotate(3.5deg); }
+  60%  { transform: translate(-40px,-45px) rotate(-3deg); }
+  85%  { transform: translate(25px,20px) rotate(2deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
 @keyframes kw4 {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  35%     { transform: translate(-30px,14px) rotate(-1deg); }
-  65%     { transform: translate(22px,-22px) rotate(2deg); }
+  0%   { transform: translate(0,0) rotate(0deg); }
+  35%  { transform: translate(-55px,30px) rotate(-3deg); }
+  65%  { transform: translate(45px,-40px) rotate(4deg); }
+  90%  { transform: translate(-15px,20px) rotate(-2deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
 @keyframes kw5 {
-  0%,100% { transform: translate(0,0) rotate(0deg); }
-  50%     { transform: translate(18px,-20px) rotate(1deg); }
+  0%   { transform: translate(0,0) rotate(0deg); }
+  30%  { transform: translate(45px,-40px) rotate(3deg); }
+  60%  { transform: translate(-35px,30px) rotate(-3.5deg); }
+  85%  { transform: translate(20px,-15px) rotate(2deg); }
+  100% { transform: translate(0,0) rotate(0deg); }
 }
+
+/* ── Slide 3 — circle highlight & line signal ────── */
+@keyframes circle-highlight {
+  0%   { background: rgba(217,119,6,0.15); border-color: rgba(217,119,6,0.55); box-shadow: 0 0 20px rgba(217,119,6,0.15); transform: scale(1); }
+  30%  { background: rgba(217,119,6,0.7); border-color: rgba(255,190,0,1); box-shadow: 0 0 40px rgba(217,119,6,1), 0 0 70px rgba(217,119,6,0.5); transform: scale(1.25); color: #fff; }
+  100% { background: rgba(217,119,6,0.5); border-color: rgba(255,170,0,0.9); box-shadow: 0 0 30px rgba(217,119,6,0.7), 0 0 50px rgba(217,119,6,0.3); transform: scale(1.1); color: #fff; }
+}
+
+@keyframes line-flow {
+  0%   { background-position: -60% 0; }
+  100% { background-position: 160% 0; }
+}
+
+/* ── Slide 5 border draw (clockwise) ─────────────── */
+@keyframes bd-top    { from { width: 0 }    to { width: 100% } }
+@keyframes bd-right  { from { height: 0 }   to { height: 100% } }
+@keyframes bd-bottom { from { width: 0 }    to { width: 100% } }
+@keyframes bd-left   { from { height: 0 }   to { height: 100% } }
 
 /* ── Timeline bars (Slide 5) ────────────────────── */
 @keyframes bar-grow-full {
@@ -194,3 +223,126 @@
 [data-slide] .bar-short { width: 0; }
 [data-slide].active .bar-full  { animation: bar-grow-full  0.9s 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
 [data-slide].active .bar-short { animation: bar-grow-short 1.4s 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* ── 추가 딜레이 클래스 ──────────────────────────── */
+[data-slide] .pr-d6,
+[data-slide] .pr-l-d2,
+[data-slide] .pr-r-d2,
+[data-slide] .pr-down,
+[data-slide] .pr-down-d1,
+[data-slide] .pr-pop,
+[data-slide] .pr-pop-d1,
+[data-slide] .pr-pop-d2,
+[data-slide] .pr-pop-d3,
+[data-slide] .pr-pop-d4 { opacity: 0; }
+
+[data-slide].active .pr-d6      { animation: pr-up    0.8s 0.90s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-l-d2    { animation: pr-left  0.8s 0.40s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-r-d2    { animation: pr-right 0.8s 0.40s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-down    { animation: pr-down  0.8s       cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-down-d1 { animation: pr-down  0.8s 0.15s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-pop     { animation: pr-pop   0.55s      cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-pop-d1  { animation: pr-pop   0.55s 0.12s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-pop-d2  { animation: pr-pop   0.55s 0.24s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-pop-d3  { animation: pr-pop   0.55s 0.36s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-pop-d4  { animation: pr-pop   0.55s 0.48s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* ── 슬라이드 진입 wipe-up 오버레이 ─────────────── */
+@keyframes slide-wipe-up {
+  from { transform: translateY(0%); }
+  to   { transform: translateY(-100%); }
+}
+[data-slide] .slide-wipe {
+  background: #050508;
+  transform: translateY(0%);
+}
+[data-slide].active .slide-wipe {
+  animation: slide-wipe-up 0.75s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes pr-tl {
+  from { opacity: 0; transform: translate(-60px, -60px); }
+  to   { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes pr-tr {
+  from { opacity: 0; transform: translate(60px, -60px); }
+  to   { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes pr-bl {
+  from { opacity: 0; transform: translate(-60px, 60px); }
+  to   { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes pr-br {
+  from { opacity: 0; transform: translate(60px, 60px); }
+  to   { opacity: 1; transform: translate(0, 0); }
+}
+
+[data-slide] .pr-tl,
+[data-slide] .pr-tr,
+[data-slide] .pr-bl,
+[data-slide] .pr-br { opacity: 0; }
+
+[data-slide].active .pr-tl { animation: pr-tl 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-tr { animation: pr-tr 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-bl { animation: pr-bl 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) forwards; }
+[data-slide].active .pr-br { animation: pr-br 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+@keyframes pr-down {
+  from { opacity: 0; transform: translateY(-40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pr-pop {
+  0%   { opacity: 0; transform: scale(0.55); }
+  65%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,6,0); }
+  50%       { box-shadow: 0 0 24px 4px rgba(217,119,6,0.18); }
+}
+@keyframes step-appear {
+  from { opacity: 0; transform: scale(0.5) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes qmark-pulse {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%       { transform: scale(1.35); opacity: 0.75; }
+}
+.qmark-pulse { animation: qmark-pulse 1.6s ease-in-out infinite; display: inline-block; }
+
+@keyframes vs-pop {
+  0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+  70%  { opacity: 1; transform: scale(1.2) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes star-burst {
+  0%   { opacity: 0; transform: scale(0.2); }
+  40%  { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+@keyframes star-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.92); }
+  50%       { opacity: 1;    transform: scale(1.12); }
+}
+@keyframes ray-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes white-sparkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7); }
+  50%       { opacity: 1;    transform: scale(1.15); }
+}
+@keyframes flicker-in {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.85; }
+  18%  { opacity: 0.1; }
+  30%  { opacity: 0.95; }
+  42%  { opacity: 0.3; }
+  55%  { opacity: 1; }
+  68%  { opacity: 0.6; }
+  80%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
