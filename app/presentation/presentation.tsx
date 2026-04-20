@@ -428,7 +428,7 @@ export default function PresentationSlides() {
               </div>
               {/* 행 */}
               {[
-                { brand: '우버',        func: '택시사업',    value: '일상에 필요한 모든것을 연결' },
+                { brand: '우버',        func: '운송업',      value: '일상에 필요한 모든것을 연결' },
                 { brand: '코카콜라',    func: '탄산음료',    value: '행복과 나눔' },
                 { brand: '움프쿠아',    func: '은행',        value: '고객에게 서비스를 제공하는 소매업' },
                 { brand: 'ST UNITAS',   func: '온라인 강의', value: '?', highlight: true },
