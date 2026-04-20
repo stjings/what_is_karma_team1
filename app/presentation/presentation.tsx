@@ -428,9 +428,9 @@ export default function PresentationSlides() {
               </div>
               {/* 행 */}
               {[
-                { brand: '나이키',      func: '운동화',      value: '노력으로 극복해나가는 스포츠 정신' },
+                { brand: '우버',        func: '택시사업',    value: '일상에 필요한 모든것을 연결' },
                 { brand: '코카콜라',    func: '탄산음료',    value: '행복과 나눔' },
-                { brand: '샤넬',        func: '패션 브랜드', value: '우아함과 자유' },
+                { brand: '움프쿠아',    func: '은행',        value: '고객에게 서비스를 제공하는 소매업' },
                 { brand: 'ST UNITAS',   func: '온라인 강의', value: '?', highlight: true },
               ].map((row, i) => (
                 <div key={row.brand}
